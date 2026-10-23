@@ -16,7 +16,6 @@ void Game::Initialize()
    isGameOver = false;
    score = 0;
    direction = RIGHT;
-   restartGame = false;
    snake.SetBodySize({tileSize, tileSize});
    snake.SetBody({{90, 450}, {60, 450}, {30, 450}});
    snake.SetHeadColor({41, 143, 69, 255});
@@ -26,10 +25,10 @@ void Game::Initialize()
 
 void Game::Update()
 {
-   HandleRestartGame();
-
-   if (isGameOver)
+   if (isGameOver) {
+      HandleRestartGame();
       return;
+   }
 
    HandleDirection();
    UpdateSnakePosition();
@@ -49,8 +48,7 @@ void Game::HandleDirection()
 
 void Game::HandleRestartGame()
 {
-   restartGame = input.CheckRestartGame();
-   if (restartGame && isGameOver)
+   if (input.CheckRestartGame())
    {
       Initialize();
    }

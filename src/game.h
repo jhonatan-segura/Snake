@@ -19,7 +19,6 @@ private:
    float timeToDrawSnake;
    enum Direction direction;
    bool isGameOver;
-   bool restartGame;
    int score;
    std::queue<Direction> queueMoves;
 
