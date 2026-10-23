@@ -3,30 +3,41 @@
 #include <random>
 
 Game::Game()
-    : snake(
-          {tileSize, tileSize},
-          {{90, 450}, {60, 450}, {30, 450}},
-          {41, 143, 69, 255},
-          {50, 168, 82, 255})
+{
+   Initialize();
+}
+
+void Game::Initialize()
 {
    backgroundColor = {25, 25, 25, 255};
    lightGray = {70, 70, 70, 255};
    apple.color = RED;
+   timeToDrawSnake = 0;
+   isGameOver = false;
+   score = 0;
+   direction = RIGHT;
+   restartGame = false;
+   snake.SetBodySize({tileSize, tileSize});
+   snake.SetBody({{90, 450}, {60, 450}, {30, 450}});
+   snake.SetHeadColor({41, 143, 69, 255});
+   snake.SetBodyColor({50, 168, 82, 255});
    GenerateRandomApple();
 }
 
 void Game::Update()
 {
+   HandleRestartGame();
+
    if (isGameOver)
       return;
 
-   HandleInput();
+   HandleDirection();
    UpdateSnakePosition();
    CheckAppleEaten();
    CheckSelfCollision();
 }
 
-void Game::HandleInput()
+void Game::HandleDirection()
 {
    Direction prevDir = direction;
    input.CheckDirection(direction);
@@ -36,11 +47,20 @@ void Game::HandleInput()
    }
 }
 
+void Game::HandleRestartGame()
+{
+   restartGame = input.CheckRestartGame();
+   if (restartGame && isGameOver)
+   {
+      Initialize();
+   }
+}
+
 void Game::UpdateSnakePosition()
 {
    this->timeToDrawSnake += GetFrameTime();
    // std::cout << "Tiempo " << this->timeToDrawSnake;
-   if (timeToDrawSnake >= 0.15f)
+   if (timeToDrawSnake >= 0.10f)
    {
       CheckBorderCollision();
 
@@ -193,7 +213,7 @@ void Game::CheckAppleEaten()
 void Game::CheckSelfCollision()
 {
    Vector2 head = snake.GetPositionAt(0);
-   for (int i = 2; i < snake.GetBodyCount(); i++)
+   for (int i = 3; i < snake.GetBodyCount(); i++)
    {
       if (head.x == snake.GetPositionAt(i).x &&
           head.y == snake.GetPositionAt(i).y)

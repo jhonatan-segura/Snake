@@ -1,7 +1,12 @@
 #include "input.h"
 
-void Input::HandleInput()
+bool Input::CheckRestartGame()
 {
+   if (IsKeyPressed(KEY_R))
+   {
+      return true;
+   }
+   return false;
 }
 
 void Input::CheckDirection(Direction &direction)

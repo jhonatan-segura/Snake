@@ -16,11 +16,11 @@ private:
    const float tileSize = screenWidth / columns;
    Color backgroundColor;
    Color lightGray;
-   float timeToDrawSnake = 0;
-   // float lastTimeInputPressed = 0;
-   enum Direction direction = RIGHT;
-   bool isGameOver = false;
-   int score = 0;
+   float timeToDrawSnake;
+   enum Direction direction;
+   bool isGameOver;
+   bool restartGame;
+   int score;
    std::queue<Direction> queueMoves;
 
    Input input;
@@ -29,8 +29,10 @@ private:
 
 public:
    Game();
+   void Initialize();
    void Update();
-   void HandleInput();
+   void HandleDirection();
+   void HandleRestartGame();
    void UpdateSnakePosition();
    void Draw();
    void SetTimeToDrawTile(float time);

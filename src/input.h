@@ -6,6 +6,6 @@
 class Input
 {
 public:
-   void HandleInput();
-   void CheckDirection(Direction& direction);
+   bool CheckRestartGame();
+   void CheckDirection(Direction &direction);
 };

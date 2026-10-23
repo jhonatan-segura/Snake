@@ -1,5 +1,10 @@
 #include "snake.h"
 
+Snake::Snake()
+{
+
+}
+
 Vector2 Snake::GetBodySize()
 {
    return this->bodySize;
@@ -28,6 +33,21 @@ Color Snake::GetBodyColor()
 void Snake::SetBodySize(Vector2 bodySize)
 {
    this->bodySize = bodySize;
+}
+
+void Snake::SetBody(std::vector<Vector2> body)
+{
+   this->body = body;
+}
+
+void Snake::SetHeadColor(Color headColor)
+{
+   this->headColor = headColor;
+}
+
+void Snake::SetBodyColor(Color bodyColor)
+{
+   this->bodyColor = bodyColor;
 }
 
 void Snake::AddSegment(Vector2 position)
