@@ -17,7 +17,7 @@ private:
    Color backgroundColor;
    Color lightGray;
    float timeToDrawSnake;
-   enum Direction direction;
+   enum Direction headDirection;
    bool isGameOver;
    int score;
    std::queue<Direction> queueMoves;

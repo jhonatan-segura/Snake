@@ -3,19 +3,18 @@
 
 int main(void)
 {
-   Game game;
-   InitWindow(game.GetScreenWidth(), game.GetScreenHeight(), "SNAKE");
+   InitWindow(900, 900, "SNAKE");
 
    SetTargetFPS(60);
 
+   Game game;
    while (!WindowShouldClose())
    {
       game.Update();
       game.Draw();
    }
 
-   // De-Initialization
-   CloseWindow(); // Close window and OpenGL context
+   CloseWindow();
 
    return 0;
 }

@@ -11,13 +11,12 @@ void Game::Initialize()
 {
    backgroundColor = {25, 25, 25, 255};
    lightGray = {70, 70, 70, 255};
-   apple.color = RED;
    timeToDrawSnake = 0;
    isGameOver = false;
    score = 0;
-   direction = RIGHT;
+   headDirection = RIGHT;
    snake.SetBodySize({tileSize, tileSize});
-   snake.SetBody({{90, 450}, {60, 450}, {30, 450}});
+   snake.SetBody({{{90, 30}, RIGHT, RIGHT}, {{60, 30}, RIGHT, RIGHT}, {{30, 30}, RIGHT, RIGHT}});
    snake.SetHeadColor({41, 143, 69, 255});
    snake.SetBodyColor({50, 168, 82, 255});
    GenerateRandomApple();
@@ -25,7 +24,8 @@ void Game::Initialize()
 
 void Game::Update()
 {
-   if (isGameOver) {
+   if (isGameOver)
+   {
       HandleRestartGame();
       return;
    }
@@ -38,11 +38,11 @@ void Game::Update()
 
 void Game::HandleDirection()
 {
-   Direction prevDir = direction;
-   input.CheckDirection(direction);
-   if (prevDir != direction)
+   Direction prevDir = headDirection;
+   input.CheckDirection(headDirection);
+   if (prevDir != headDirection)
    {
-      queueMoves.push(direction);
+      queueMoves.push(headDirection);
    }
 }
 
@@ -57,21 +57,20 @@ void Game::HandleRestartGame()
 void Game::UpdateSnakePosition()
 {
    this->timeToDrawSnake += GetFrameTime();
-   // std::cout << "Tiempo " << this->timeToDrawSnake;
-   if (timeToDrawSnake >= 0.10f)
+
+   float snakeDrawSpeed = 0.11f;
+   if (timeToDrawSnake >= snakeDrawSpeed)
    {
       CheckBorderCollision();
-
       timeToDrawSnake = 0;
       Vector2 displacement = {0, 0};
-      Direction _direction = direction;
       if (!queueMoves.empty())
       {
-         _direction = queueMoves.front();
+         headDirection = queueMoves.front();
          queueMoves.pop();
       }
 
-      switch (_direction)
+      switch (headDirection)
       {
       case UP:
          displacement.y = -tileSize;
@@ -86,7 +85,7 @@ void Game::UpdateSnakePosition()
          displacement.y = tileSize;
          break;
       }
-      snake.Move(displacement);
+      snake.Move(displacement, headDirection);
       // std::cout << "pos snake " << (int)snake.GetPositionAt(0).x << " " << snake.GetPositionAt(0).x << (int)snake.GetPositionAt(0).y << " " << snake.GetPositionAt(0).y << std::endl;
       // std::cout << "pos apple " << (int)apple.position.x << " " << (int)apple.position.y << std::endl;
       // bool eval1 = (int)snake.GetPositionAt(0).x == (int)apple.position.x;
@@ -108,13 +107,10 @@ void Game::Draw()
       DrawLineV({0, (float)i * tileSize}, {(float)GetScreenHeight(), (float)i * tileSize}, lightGray);
    }
 
-   DrawRectangleV(apple.position, {tileSize, tileSize}, apple.color);
+   // DrawRectangleV(apple.position, {tileSize, tileSize}, apple.color);
+   apple.Draw();
 
-   DrawRectangleV(snake.GetPositionAt(0), snake.GetBodySize(), snake.GetHeadColor());
-   for (int i = 1; i < snake.GetBodyCount(); i++)
-   {
-      DrawRectangleV(snake.GetPositionAt(i), snake.GetBodySize(), snake.GetBodyColor());
-   }
+   snake.Draw();
 
    if (isGameOver)
    {
@@ -154,26 +150,26 @@ int Game::GetScreenHeight()
 void Game::GenerateRandomApple()
 {
    bool applePlacedSuccessfully = true;
+   // 1. Obtain a random seed from the hardware
+   std::random_device rd;
+
+   // 2. Initialize the Mersenne Twister engine with the seed
+   std::mt19937 gen(rd());
+
+   // 3. Define the range (inclusive, e.g., 1 to 30)
+   std::uniform_int_distribution<> distr(0, columns - 1);
    do
    {
-      // 1. Obtain a random seed from the hardware
-      std::random_device rd;
-
-      // 2. Initialize the Mersenne Twister engine with the seed
-      std::mt19937 gen(rd());
-
-      // 3. Define the range (inclusive, e.g., 1 to 30)
-      std::uniform_int_distribution<> distr(0, columns - 1);
-
       // 4. Generate random numbers
       int appleX = distr(gen) * tileSize;
       int appleY = distr(gen) * tileSize;
-      apple.position = {(float)appleX, (float)appleY};
+      apple.SetPosition({(float)appleX, (float)appleY});
       for (int i = 0; i < snake.GetBodyCount(); i++)
       {
          if (appleX == snake.GetPositionAt(i).x &&
              appleY == snake.GetPositionAt(i).y)
          {
+            std::cout << "invalid apple location" << std::endl;
             applePlacedSuccessfully = false;
          }
       }
@@ -183,25 +179,25 @@ void Game::GenerateRandomApple()
 void Game::CheckAppleEaten()
 {
    Vector2 head = snake.GetPositionAt(0);
-   if (head.x == apple.position.x &&
-       head.y == apple.position.y)
+   BodyPart tail = snake.GetTail();
+   if (head.x == apple.GetPosition().x &&
+       head.y == apple.GetPosition().y)
    {
       GenerateRandomApple();
-      if (direction == UP)
+      switch (tail.direction)
       {
-         snake.AddSegment({head.x, head.y + tileSize});
-      }
-      else if (direction == LEFT)
-      {
-         snake.AddSegment({head.x + tileSize, head.y});
-      }
-      else if (direction == RIGHT)
-      {
-         snake.AddSegment({head.x - tileSize, head.y});
-      }
-      else if (direction == DOWN)
-      {
-         snake.AddSegment({head.x, head.y - tileSize});
+      case UP:
+         snake.AddSegment({{tail.position.x, tail.position.y + tileSize}, UP});
+         break;
+      case LEFT:
+         snake.AddSegment({{tail.position.x + tileSize, tail.position.y}, LEFT});
+         break;
+      case RIGHT:
+         snake.AddSegment({{tail.position.x - tileSize, tail.position.y}, RIGHT});
+         break;
+      case DOWN:
+         snake.AddSegment({{tail.position.x, tail.position.y - tileSize}, DOWN});
+         break;
       }
       score++;
       // std::cout << "snake size " << snake.GetBodyCount() << std::endl;
@@ -225,14 +221,16 @@ void Game::CheckBorderCollision()
 {
    Vector2 head = snake.GetPositionAt(0);
    if (head.x == 0 &&
-           direction == LEFT ||
+           headDirection == LEFT ||
        (head.x + tileSize) == GetScreenWidth() &&
-           direction == RIGHT ||
+           headDirection == RIGHT ||
        head.y == 0 &&
-           direction == UP ||
+           headDirection == UP ||
        (head.y + tileSize) == GetScreenHeight() &&
-           direction == DOWN)
+           headDirection == DOWN)
    {
+      std::cout << "border colission" << std::endl;
       isGameOver = true;
+      exit(1);
    }
 }
