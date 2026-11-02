@@ -1,4 +1,5 @@
 #include "game.h"
+#include "constants.h"
 #include <iostream>
 #include <random>
 
@@ -16,7 +17,7 @@ void Game::Initialize()
    score = 0;
    headDirection = RIGHT;
    snake.SetBodySize({tileSize, tileSize});
-   snake.SetBody({{{90, 30}, RIGHT, RIGHT}, {{60, 30}, RIGHT, RIGHT}, {{30, 30}, RIGHT, RIGHT}});
+   snake.SetBody({{{tileSize * 3, tileSize}, RIGHT}, {{tileSize * 2, tileSize}, RIGHT}, {{tileSize, tileSize}, RIGHT}});
    snake.SetHeadColor({41, 143, 69, 255});
    snake.SetBodyColor({50, 168, 82, 255});
    GenerateRandomApple();
@@ -149,14 +150,14 @@ int Game::GetScreenHeight()
 
 void Game::GenerateRandomApple()
 {
-   bool applePlacedSuccessfully = true;
+   bool applePlacedSuccessfully;
    // 1. Obtain a random seed from the hardware
    std::random_device rd;
 
    // 2. Initialize the Mersenne Twister engine with the seed
    std::mt19937 gen(rd());
 
-   // 3. Define the range (inclusive, e.g., 1 to 30)
+   // 3. Define the range (inclusive, e.g., 1 to columns)
    std::uniform_int_distribution<> distr(0, columns - 1);
    do
    {
@@ -164,13 +165,16 @@ void Game::GenerateRandomApple()
       int appleX = distr(gen) * tileSize;
       int appleY = distr(gen) * tileSize;
       apple.SetPosition({(float)appleX, (float)appleY});
+
+      applePlacedSuccessfully = true;
+
       for (int i = 0; i < snake.GetBodyCount(); i++)
       {
          if (appleX == snake.GetPositionAt(i).x &&
              appleY == snake.GetPositionAt(i).y)
          {
-            std::cout << "invalid apple location" << std::endl;
             applePlacedSuccessfully = false;
+            continue;
          }
       }
    } while (!applePlacedSuccessfully);

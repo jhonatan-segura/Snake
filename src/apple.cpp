@@ -1,4 +1,5 @@
 #include "apple.h"
+#include "constants.h"
 
 Apple::Apple() 
 {
@@ -13,7 +14,7 @@ Apple::~Apple()
 
 void Apple::Draw()
 {
-   DrawTextureV(image, position, WHITE);
+   DrawTexturePro(image, {0, 0, (float)image.width, (float)image.height}, {position.x, position.y, tileSize, tileSize}, {0, 0}, 0, WHITE);
 }
 
 Vector2 Apple::GetPosition()

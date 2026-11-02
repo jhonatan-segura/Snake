@@ -10,10 +10,6 @@
 class Game
 {
 private:
-   const int screenWidth = 900;
-   const int screenHeight = 900;
-   const float columns = 30.0f;
-   const float tileSize = screenWidth / columns;
    Color backgroundColor;
    Color lightGray;
    float timeToDrawSnake;

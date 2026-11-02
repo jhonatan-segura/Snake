@@ -1,9 +1,10 @@
 #include "raylib.h"
 #include "game.h"
+#include "constants.h"
 
 int main(void)
 {
-   InitWindow(900, 900, "SNAKE");
+   InitWindow(screenWidth, screenHeight, "SNAKE");
 
    SetTargetFPS(60);
 
