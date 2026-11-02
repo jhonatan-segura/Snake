@@ -38,5 +38,5 @@ public:
    void GenerateRandomApple();
    void CheckAppleEaten();
    void CheckSelfCollision();
-   void CheckBorderCollision();
+   bool CollisionOnBorder();
 };

@@ -62,7 +62,10 @@ void Game::UpdateSnakePosition()
    float snakeDrawSpeed = 0.11f;
    if (timeToDrawSnake >= snakeDrawSpeed)
    {
-      CheckBorderCollision();
+      if (CollisionOnBorder()) {
+         return;
+      }
+
       timeToDrawSnake = 0;
       Vector2 displacement = {0, 0};
       if (!queueMoves.empty())
@@ -221,7 +224,7 @@ void Game::CheckSelfCollision()
    }
 }
 
-void Game::CheckBorderCollision()
+bool Game::CollisionOnBorder()
 {
    Vector2 head = snake.GetPositionAt(0);
    if (head.x == 0 &&
@@ -235,6 +238,8 @@ void Game::CheckBorderCollision()
    {
       std::cout << "border colission" << std::endl;
       isGameOver = true;
-      exit(1);
+      return isGameOver;
+      // exit(1);
    }
+   return false;
 }
