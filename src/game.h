@@ -5,6 +5,7 @@
 #include "direction.h"
 #include "input.h"
 #include "apple.h"
+#include "background.h"
 #include <queue>
 
 class Game
@@ -19,6 +20,7 @@ private:
    std::queue<Direction> queueMoves;
 
    Input input;
+   Background background;
    Snake snake;
    Apple apple;
 
@@ -27,6 +29,7 @@ public:
    void Initialize();
    void Update();
    void HandleDirection();
+   void ClearQueueMoves(std::queue<Direction> &q);
    void HandleRestartGame();
    void UpdateSnakePosition();
    void Draw();

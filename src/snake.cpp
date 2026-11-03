@@ -34,22 +34,25 @@ void Snake::Draw()
    Vector2 headPos = body[0].position;
    Direction headDir = body[0].direction;
    float headWidth = (float)headImage.width;
+   float jointWidth = (float)jointImage.width;
+   float bodyWidth = (float)bodyImage.width;
+   float tailWidth = (float)tailImage.width;
    DrawTexturePro(headImage, {0, 0, headDir == LEFT ? headWidth * -1 : headWidth, (float)headImage.height}, {headPos.x + halfTileSize, headPos.y + halfTileSize, tileSize, tileSize}, {halfTileSize, halfTileSize}, GetRotationFromDirection(headDir), WHITE);
 
    for (int i = 1; i < body.size() - 1; i++)
    {
       if (body[i].isJoint)
       {
-         DrawTexturePro(jointImage, {0, 0, headWidth, (float)headImage.height}, {body[i].position.x + halfTileSize, body[i].position.y + halfTileSize, tileSize, tileSize}, {halfTileSize, halfTileSize}, body[i].rotationAngle, WHITE);
+         DrawTexturePro(jointImage, {0, 0, jointWidth, (float)jointImage.height}, {body[i].position.x + halfTileSize, body[i].position.y + halfTileSize, tileSize, tileSize}, {halfTileSize, halfTileSize}, body[i].rotationAngle, WHITE);
       }
       else
       {
-         DrawTexturePro(bodyImage, {0, 0, body[i].direction == LEFT ? headWidth * -1 : headWidth, (float)bodyImage.height}, {body[i].position.x + halfTileSize, body[i].position.y + halfTileSize, tileSize, tileSize}, {halfTileSize, halfTileSize}, GetRotationFromDirection(body[i].direction), WHITE);
+         DrawTexturePro(bodyImage, {0, 0, body[i].direction == LEFT ? bodyWidth * -1 : bodyWidth, (float)bodyImage.height}, {body[i].position.x + halfTileSize, body[i].position.y + halfTileSize, tileSize, tileSize}, {halfTileSize, halfTileSize}, GetRotationFromDirection(body[i].direction), WHITE);
       }
    }
    Vector2 tailPos = body[body.size() - 1].position;
    Direction tailDir = body[body.size() - 1].direction;
-   DrawTexturePro(tailImage, {0, 0, tailDir == LEFT ? headWidth * -1 : headWidth, (float)tailImage.height}, {tailPos.x + halfTileSize, tailPos.y + halfTileSize, tileSize, tileSize}, {halfTileSize, halfTileSize}, GetRotationFromDirection(tailDir), WHITE);
+   DrawTexturePro(tailImage, {0, 0, tailDir == LEFT ? tailWidth * -1 : tailWidth, (float)tailImage.height}, {tailPos.x + halfTileSize, tailPos.y + halfTileSize, tileSize, tileSize}, {halfTileSize, halfTileSize}, GetRotationFromDirection(tailDir), WHITE);
 }
 
 Vector2 Snake::GetBodySize()

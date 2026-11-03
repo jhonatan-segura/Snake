@@ -12,6 +12,7 @@
                 "${workspaceFolder}\\src\\snake.cpp",
                 "${workspaceFolder}\\src\\input.cpp",
                 "${workspaceFolder}\\src\\apple.cpp",
+                "${workspaceFolder}\\src\\background.cpp",
                 "-o",
                 "${workspaceFolder}\\bin\\snake.exe",
                 "-I",

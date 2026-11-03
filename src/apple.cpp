@@ -3,7 +3,7 @@
 
 Apple::Apple() 
 {
-   image = LoadTexture("assets/graphics/apple.png");
+   image = LoadTexture("assets/graphics/apple2.png");
    color = RED;
 }
 

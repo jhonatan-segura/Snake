@@ -21,6 +21,12 @@ void Game::Initialize()
    snake.SetHeadColor({41, 143, 69, 255});
    snake.SetBodyColor({50, 168, 82, 255});
    GenerateRandomApple();
+   ClearQueueMoves(queueMoves);
+}
+
+void Game::ClearQueueMoves(std::queue<Direction> &q)
+{
+   std::queue<Direction>().swap(q);
 }
 
 void Game::Update()
@@ -62,7 +68,8 @@ void Game::UpdateSnakePosition()
    float snakeDrawSpeed = 0.11f;
    if (timeToDrawSnake >= snakeDrawSpeed)
    {
-      if (CollisionOnBorder()) {
+      if (CollisionOnBorder())
+      {
          return;
       }
 
@@ -105,11 +112,12 @@ void Game::Draw()
 
    ClearBackground(backgroundColor);
 
-   for (int i = 1; i < columns; i++)
-   {
-      DrawLineV({(float)i * tileSize, 0}, {(float)i * tileSize, (float)GetScreenHeight()}, lightGray);
-      DrawLineV({0, (float)i * tileSize}, {(float)GetScreenHeight(), (float)i * tileSize}, lightGray);
-   }
+   // for (int i = 1; i < columns; i++)
+   // {
+   //    DrawLineV({(float)i * tileSize, 0}, {(float)i * tileSize, (float)GetScreenHeight()}, lightGray);
+   //    DrawLineV({0, (float)i * tileSize}, {(float)GetScreenHeight(), (float)i * tileSize}, lightGray);
+   // }
+   background.Draw();
 
    // DrawRectangleV(apple.position, {tileSize, tileSize}, apple.color);
    apple.Draw();
